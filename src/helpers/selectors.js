@@ -1,6 +1,3 @@
-
-
-
 export function getAppointmentsForDay(state, name) {
   
   const filteredDayByName = state["days"].filter(day => day.name === name);
@@ -24,4 +21,17 @@ export function getAppointmentsForDay(state, name) {
   // console.log("filteredAppt: ",filteredAppt);
   
   return filteredAppt;
+}
+
+
+export function getInterview(state, interview) {
+  if (interview === null) {
+    return null;
+  }
+  const interviewerId = interview.interviewer;
+  // console.log("interviewerId", interviewerId);
+
+  interview.interviewer = state.interviewers[interviewerId];
+  // console.log("interview", interview)
+  return interview;
 }
