@@ -5,6 +5,7 @@ import Appointment from "./Appointment"
 import axios from "axios";
 
 import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
+import { actions } from "@storybook/addon-actions";
 
 
 export default function Application(props) {
@@ -48,16 +49,18 @@ export default function Application(props) {
       [id]: appointment
     };
 
-    setState({
-      ...state,
-      appointments
-    });
-    // console.log("id", id, "interview", interview);
-    console.log("book interview appointments: ", appointments);
-    console.log("state", state);
+    return axios.put(`/api/appointments/${id}`, {
+      interview
+    })
+    .then(()=>{
+      setState({
+        ...state,
+        appointments
+      });
+    })
+   
 
   }
-
 
 
 

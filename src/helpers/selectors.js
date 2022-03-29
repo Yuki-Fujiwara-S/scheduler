@@ -28,12 +28,22 @@ export function getInterview(state, interview) {
   if (interview === null) {
     return null;
   }
-  const interviewerId = interview.interviewer;
-  // console.log("interviewerId", interviewerId);
+  //Commenting this out helps it work
+  // const interviewerId = interview.interviewer;
+  // // console.log("interviewerId", interviewerId);
 
-  interview.interviewer = state.interviewers[interviewerId];
-  // console.log("interview", interview)
-  return interview;
+  // interview.interviewer = state.interviewers[interviewerId];
+  // // console.log("interview", interview)
+  // return interview;
+
+ 
+  return {
+    // student: interview.student,
+    // interviewer: interviewerDetails
+
+    ...interview,
+    interviewer: state.interviewers[interview.interviewer]
+  }
 }
 
 export function getInterviewersForDay(state, name) {
