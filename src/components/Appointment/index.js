@@ -19,6 +19,18 @@ export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
+
+  function save(name, interviewer) {
+    // console.log("name: ", name, "interviewer: ", interviewer)
+    const interview = {
+      student: name,
+      interviewer
+    };
+    props.bookInterview(props.id, interview)
+    // transition(SHOW)
+  }
+
+  // console.log("appointment-props", props);
   
   return (
     <article className="appointment">
@@ -30,7 +42,7 @@ export default function Appointment(props) {
       interviewer={props.interview.interviewer}
       />
       )}
-      {mode === CREATE && <Form interviewers={props.interviewers} onCancel={()=>back()} />}
+      {mode === CREATE && <Form interviewers={props.interviewers} value={props.interview ? props.interview.interviewer : null} onCancel={()=>back()} onSave={save} />}
     </article>
   );
 }

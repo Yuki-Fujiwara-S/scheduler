@@ -6,6 +6,7 @@ import InterviewerListItem from "./InterviewerListItem";
 
 
 export default function InterviewerList(props) {
+  console.log("props", props)
   const interviewers = props.interviewers.map((interviewer) => {
     return (
       <InterviewerListItem 

@@ -15,7 +15,7 @@ export default function Application(props) {
     appointments: {},
     interviewers: {}
   });
-
+  console.log("abc");
   
 
   const setDay = day => setState(prev => ({ ...prev, day }));
@@ -35,11 +35,38 @@ export default function Application(props) {
   })
 }, []);
 
+  function bookInterview(id, interview) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    
+    console.log("book interview appointment: ", appointment);
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    setState({
+      ...state,
+      appointments
+    });
+    // console.log("id", id, "interview", interview);
+    console.log("book interview appointments: ", appointments);
+    console.log("state", state);
+
+  }
+
+
+
+
   const dailyAppointments = getAppointmentsForDay(state, state.day);
   const dailyInterviewers = getInterviewersForDay(state, state.day);
 
 
   const appointmentArray = dailyAppointments.map((appointment) => {
+    // console.log("appointment", appointment);
     const interview = getInterview(state, appointment.interview);
     return (
       <Appointment
@@ -48,6 +75,7 @@ export default function Application(props) {
         time={appointment.time}
         interview={interview}
         interviewers={dailyInterviewers}
+        bookInterview={bookInterview}
       />
     );
   }) 
