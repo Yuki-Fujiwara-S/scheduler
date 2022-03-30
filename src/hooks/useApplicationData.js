@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 
-export default function useVisualMode(initial) {
+export default function useApplicationData(initial) {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -24,6 +24,29 @@ export default function useVisualMode(initial) {
       setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
     })
   }, []);
+
+  // looks at appointments array in each day, returns free spots based on null interviews
+  function getSpotsRemaining(day, appointments) {
+    let spotsRemaining = 0;
+    let spotsInDay = day.appointments;
+    for (const spot of spotsInDay) {
+      if (appointments[spot].interview === null) {
+        spotsRemaining++;
+      }
+    }
+    return spotsRemaining;
+  }
+
+  // sets state of days with update spots
+  function updateDaysSpots(days, appointments) {
+    const updatedDays = days.map(day => ({
+      ...day,
+      spots: getSpotsRemaining(day, appointments)
+    }));
+    return updatedDays;
+  }
+
+  
   
   function bookInterview(id, interview) {
     const appointment = {
@@ -35,15 +58,14 @@ export default function useVisualMode(initial) {
       ...state.appointments,
       [id]: appointment
     };
+
+    //days with update days spots
+    const days = updateDaysSpots(state.days, appointments);
   
     return axios.put(`/api/appointments/${id}`, {
       interview
     })
-      .then(() => {
-        setState({
-          ...state,
-          appointments
-        });
+      .then(() => { setState({ ...state, appointments, days });
       })
   }
   
@@ -57,10 +79,13 @@ export default function useVisualMode(initial) {
       ...state.appointments,
       [id]: appointmentNull
     };
+
+    //days with update days spots
+    const days = updateDaysSpots(state.days, appointments);
     
     return axios.delete(`/api/appointments/${id}`)
       .then(() => {
-        setState({...state, appointments});
+        setState({...state, appointments, days });
       })
   }
   
